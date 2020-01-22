@@ -43,7 +43,6 @@ class Rundeck():
         return r.cookies['JSESSIONID']
 
     def __request(self, method, url, params=None, headers={}):
-        logger.info('{} {} Params: {}'.format(method, url, params))
         cookies = dict()
         if self.auth_cookie:
             cookies['JSESSIONID'] = self.auth_cookie
@@ -67,6 +66,8 @@ class Rundeck():
             options['params'] = params
         else:
             options['json'] = params
+
+        logger.info('{} {} Params: {} Headers: {}'.format(method, url, params, h))
 
         r = requests.request(method, url, **options)
         logger.debug(r.content)
