@@ -47,11 +47,11 @@ class Rundeck():
         if self.auth_cookie:
             cookies['JSESSIONID'] = self.auth_cookie
 
-        print(h, headers)
         h = {
             'Accept': 'application/json',
             'X-Rundeck-Auth-Token': self.token
         }
+        print(h, headers)
         # See https://github.com/rundeck/rundeck/issues/1923
         if method in ("POST", "PUT"):
             h['Content-Type']= 'application/json'
