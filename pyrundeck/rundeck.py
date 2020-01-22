@@ -216,9 +216,12 @@ class Rundeck():
         params = {'groupPath': groupPath}
         return self.__post(url, params=params)
 
-    def execution_output_by_id(self, exec_id):
+    def execution_output_by_id(self, exec_id, output_format=None):
         url = '{}/execution/{}/output'.format(self.API_URL, exec_id)
-        return self.__get(url)
+        params = {}
+        if output_format:
+            params["format"] = output_format
+        return self.__get(url, params=params)
 
     def execution_info_by_id(self, exec_id):
         url = '{}/execution/{}'.format(self.API_URL, exec_id)
