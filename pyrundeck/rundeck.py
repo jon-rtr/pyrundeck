@@ -51,7 +51,6 @@ class Rundeck():
             'Accept': 'application/json',
             'X-Rundeck-Auth-Token': self.token
         }
-        print(h, headers)
         # See https://github.com/rundeck/rundeck/issues/1923
         if method in ("POST", "PUT"):
             h['Content-Type']= 'application/json'
@@ -80,13 +79,13 @@ class Rundeck():
             return r.content
 
     def __get(self, url, params=None, headers={}):
-        return self.__request('GET', url, params)
+        return self.__request('GET', url, params, headers)
 
     def __post(self, url, params=None, headers={}):
-        return self.__request('POST', url, params)
+        return self.__request('POST', url, params, headers)
 
     def __delete(self, url, params=None, headers={}):
-        return self.__request('DELETE', url, params)
+        return self.__request('DELETE', url, params, headers)
 
     def list_tokens(self, user=None):
         url = '{}/tokens'.format(self.API_URL)
