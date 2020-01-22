@@ -73,7 +73,10 @@ class Rundeck():
         logger.debug(r.content)
         r.raise_for_status()
         try:
-            return r.json()
+            if h["Accept"] == "application/json":
+                return r.json()
+            else:
+                return r.text
         except ValueError as e:
             logger.error(e.message)
             return r.content
