@@ -47,6 +47,7 @@ class Rundeck():
         if self.auth_cookie:
             cookies['JSESSIONID'] = self.auth_cookie
 
+        print(h, headers)
         h = {
             'Accept': 'application/json',
             'X-Rundeck-Auth-Token': self.token
@@ -67,7 +68,7 @@ class Rundeck():
         else:
             options['json'] = params
 
-        logger.info('{} {} Params: {} Headers: {}'.format(method, url, params, h))
+        logger.info('{} {} Params: {} Headers: {}'.format(method, url, params, {k: h[k] for k in h if k != "X-Rundeck-Auth-Token"}))
 
         r = requests.request(method, url, **options)
         logger.debug(r.content)
