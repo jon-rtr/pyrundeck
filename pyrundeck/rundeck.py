@@ -42,7 +42,7 @@ class Rundeck():
             allow_redirects=False)
         return r.cookies['JSESSIONID']
 
-    def __request(self, method, url, params=None):
+    def __request(self, method, url, params=None, headers={}):
         logger.info('{} {} Params: {}'.format(method, url, params))
         cookies = dict()
         if self.auth_cookie:
@@ -55,6 +55,8 @@ class Rundeck():
         # See https://github.com/rundeck/rundeck/issues/1923
         if method in ("POST", "PUT"):
             h['Content-Type']= 'application/json'
+
+        h.update(headers)
 
         options = {
             'cookies': cookies,
@@ -75,13 +77,13 @@ class Rundeck():
             logger.error(e.message)
             return r.content
 
-    def __get(self, url, params=None):
+    def __get(self, url, params=None, headers={}):
         return self.__request('GET', url, params)
 
-    def __post(self, url, params=None):
+    def __post(self, url, params=None, headers={}):
         return self.__request('POST', url, params)
 
-    def __delete(self, url, params=None):
+    def __delete(self, url, params=None, headers={}):
         return self.__request('DELETE', url, params)
 
     def list_tokens(self, user=None):
@@ -219,9 +221,17 @@ class Rundeck():
     def execution_output_by_id(self, exec_id, output_format=None):
         url = '{}/execution/{}/output'.format(self.API_URL, exec_id)
         params = {}
+        headers = {}
         if output_format:
             params["format"] = output_format
-        return self.__get(url, params=params)
+            if output_format == "xml":
+                headers["Accept"] = "application/xml"
+            elif output_format == "json":
+                headers["Accept"] = "application/json"
+            elif output_format == "text":
+                headers["Accept"] = "text/plain"
+
+        return self.__get(url, params=params, headers=headers)
 
     def execution_info_by_id(self, exec_id):
         url = '{}/execution/{}'.format(self.API_URL, exec_id)
